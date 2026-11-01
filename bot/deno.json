@@ -1,0 +1,12 @@
+{
+  "tasks": {
+    "dev": "deno run --watch --allow-all ./src/main.ts"
+  },
+  "imports": {
+    "@modelcontextprotocol/sdk": "npm:@modelcontextprotocol/sdk@^1.32.2",
+    "@oak/oak": "jsr:@oak/oak@^17.2.0",
+    "@std/path": "jsr:@std/path@^1.1.6",
+    "discord.js": "npm:discord.js@^14.27.0",
+    "ollama": "npm:ollama@^0.6.4"
+  }
+}

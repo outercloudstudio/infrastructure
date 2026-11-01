@@ -35,6 +35,8 @@
               rustc
 
               httpie
+
+              deno
             ];
 
             RUST_BACKTRACE = "1";

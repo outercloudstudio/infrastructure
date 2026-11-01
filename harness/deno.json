@@ -1,0 +1,21 @@
+{
+	"name": "harness",
+	"version": "0.0.0",
+	"exports": "./mod.ts",
+	"tasks": {
+		"dev": "deno run --allow-all --watch ./src/main.ts"
+	},
+	"imports": {
+		"@modelcontextprotocol/sdk": "npm:@modelcontextprotocol/sdk@^1.27.1",
+		"@oak/oak": "jsr:@oak/oak@^17.2.0",
+		"@std/cli": "jsr:@std/cli@^1.0.28",
+		"@std/path": "jsr:@std/path@^1.1.4",
+		"ollama": "npm:ollama@^0.6.3",
+		"zod": "npm:zod@^4.6.7"
+	},
+	"lint": {
+		"rules": {
+			"exclude": ["no-explicit-any"]
+		}
+	}
+}
