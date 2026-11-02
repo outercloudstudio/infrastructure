@@ -81,9 +81,9 @@ export class Agent {
 	public async execute() {
 		const messages = this.buildMessages()
 
-		console.log('Executing!')
-		console.log('System > ' + this._systemPrompt)
-		console.log('Prompt > ' + this._prompt)
+		// console.log('Executing!')
+		// console.log('System > ' + this._systemPrompt)
+		// console.log('Prompt > ' + this._prompt)
 
 		while (true) {
 			const tools = await this.buildTools()
@@ -107,28 +107,38 @@ export class Agent {
 
 			messages.push(response.message)
 
-			if (response.message.content) {
-				console.log('-----')
-				console.log(response.message.content)
-				console.log('-----')
-			}
+			// if (response.message.content) {
+			// 	console.log('-----')
+				console.log(': ' + response.message.content)
+			// 	console.log('-----')
+			// }
 
 			if (!response.message.tool_calls?.length) break
 
 			for (const toolCall of response.message.tool_calls) {
 				const toolDefinition = tools.find(tool => tool.name === toolCall.function.name)
 
-				if (!toolDefinition) throw new Error('Tried to call non existent tool: ' + toolCall.function.name)
+				if (!toolDefinition) {
+                    messages.push({
+                        role: 'tool',
+                        content: JSON.stringify({
+                            type: 'error',
+                            message: `Tool ${toolCall.function.name} does not exist`
+                        }),
+                    })
 
-				console.log(`! Calling tool ${toolCall.function.name}`)
-                console.log(toolCall.function.arguments)
+                    continue
+                }
+
+				// console.log(`! Calling tool ${toolCall.function.name}`)
+                // console.log(toolCall.function.arguments)
 
 				const result = await toolDefinition.client.callTool({
 					name: toolCall.function.name,
 					arguments: toolCall.function.arguments,
 				})
 
-                console.log(result.content)
+                // console.log(result.content)
 
 				messages.push({
 					role: 'tool',

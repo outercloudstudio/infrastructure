@@ -27,6 +27,24 @@
         { pkgs, system }:
         {
           default = pkgs.mkShell {
+            venvDir = ".venv";
+
+            postShellHook = ''
+              venvVersionWarn() {
+              	local venvVersion
+              	venvVersion="$("$venvDir/bin/python" -c 'import platform; print(platform.python_version())')"
+
+              	[[ "$venvVersion" == "${pkgs.python313.version}" ]] && return
+
+              	cat <<EOF
+              Warning: Python version mismatch: [$venvVersion (venv)] != [${pkgs.python313.version}]
+                       Delete '$venvDir' and reload to rebuild for version ${pkgs.python313.version}
+              EOF
+              }
+
+              venvVersionWarn
+            '';
+
             packages = with pkgs; [
               deno
               self.formatter.${system}
@@ -37,6 +55,10 @@
               httpie
 
               deno
+
+              python313
+              python313.pkgs.venvShellHook
+              python313.pkgs.pip
             ];
 
             RUST_BACKTRACE = "1";
