@@ -1,5 +1,6 @@
 import { Message, Ollama, Tool } from 'ollama'
 import { CustomMcpServer, McpServer, ToolDefinition } from './mcp.ts'
+import { isSshOpen, getJobState, launchJob } from './ssh.ts'
 
 const ollama = new Ollama({
   host: 'http://34.41.70.175:25568',
@@ -74,6 +75,16 @@ export class Agent {
 
 		while (true) {
 			const tools = await this.buildTools()
+
+            if(await !isSshOpen()) throw new Error('Ollama job could not be launched')
+
+            if(await getJobState() === 'not started') {
+                await launchJob()
+            }
+
+            while(await getJobState() !== 'active') {
+                await new Promise(res => setTimeout(res, 30000))
+            }
 
 			const response = await ollama.chat({
 				model: this._model,
