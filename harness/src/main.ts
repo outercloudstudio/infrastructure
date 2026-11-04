@@ -313,8 +313,9 @@ async function botIteration(base: string): Promise<string> {
     Only the best changes and agents will survive.
 
     Some notes from the overseer:
-    - Recalls are cancelled upon taking damage.
-    - Currently bots get stuck recalling while taking damage, causing them to die.
+    - The bug with recalls being cancelled on damage causing a loop of recalling and dying is now fixed, good job.
+    - However the units should move to safety and recall when low, not just continue fighting, as the units are dying for no reason.
+    - Additionally, units can get stuck in spawn because they don't wait for a tick to heal up before leaving
 `)
         .think(true)
     await agent.execute()
@@ -322,7 +323,7 @@ async function botIteration(base: string): Promise<string> {
     return id
 }
 
-const BASE = 'c61b4608-0dd3-4a8f-ba94-e605afea348a'
+const BASE = 'eca3289b-4640-4917-a5b0-532d74117264'
 
 const ids: string[] = []
 for(let i = 0; i < 10; i++) {
@@ -356,4 +357,5 @@ for await (const entry of Deno.readDir(join(Deno.cwd(), 'workspace/bots'))) {
     await Deno.remove(join(Deno.cwd(), 'workspace/bots', entry.name), { recursive: true })
 }
 
+console.log(scores)
 console.log('ALL BOTS COMPLETE')
